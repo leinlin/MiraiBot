@@ -14,6 +14,7 @@ async def fudu(app: Mirai, group: Group, message: MessageChain):
         EventLogger.info(f"{message.toString()}消息已复读")
         await app.sendGroupMessage(group, message)
     else:
+        if last_message != None
+            EventLogger.info(f"last_message:{last_message.toString()}")
         EventLogger.info(f"{message.toString()}消息已缓存")
-        EventLogger.info(f"last_message:{last_message.toString()}")
         last_message = message
