@@ -14,7 +14,7 @@ async def fudu(app: Mirai, group: Group, message: MessageChain):
             last_image: T.Optional[Image] = last_message.getFirstComponent(Image)
             if last_image and last_image.url and last_image.url == image.url:
                 await app.sendGroupMessage(group, message)
-        else
+        else:
             await app.sendGroupMessage(group, message)
-    else
+    else:
         last_message = message
