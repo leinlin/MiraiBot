@@ -109,9 +109,9 @@ class SetuResp(BaseModel):
             "apikey": setu_apikey,
             "r18": setu_r18,
             "keyword": keyword,
-            "num": 10,
+            "num": 100,
             "proxy": setu_proxy,
-            "size1200": 'false'
+            "size1200": 'true'
         }
         async with aiohttp.request('GET', api_url, params=params) as response:
             setu_j = await response.read()

@@ -22,7 +22,7 @@ LAST_QUOTA: int = 300
 
 @sub_app.receiver("GroupMessage")
 async def GMHandler(app: Mirai, message: GroupMessage):
-    match = re.match(r'(?:.*?([\d一二两三四五六七八九十]*)张|来点)?(.{0,10}?)的?色图$', message.toString())
+    match = re.match(r'(?:.*?([\d一二两三四五六七八九十]*)张|来点)?(.{0,10}?)的?[色|涩]图$', message.toString())
     if match:
         number: int = shuzi2number(match[1])
         if number > 10:
@@ -35,12 +35,12 @@ async def GMHandler(app: Mirai, message: GroupMessage):
             EventLogger.error(e)
             EventLogger.error(traceback.format_exc())
 
-    elif message.toString() == '色图配额':
+    elif message.toString() == '[色|涩]图配额':
         await checkQuota(app, message)
 
 
 async def checkQuota(app: Mirai, message: GroupMessage):
-    resp = await SetuResp.get('色图配额')
+    resp = await SetuResp.get('[色|涩]图配额')
     await app.sendGroupMessage(group=message.sender.group,
                                message=f'剩余配额：{resp.quota}\n恢复时间：{resp.time_to_recover.strftime("%m-%d %H:%M")}',
                                quoteSource=message.messageChain.getSource())
@@ -60,7 +60,7 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
         resp = await SetuResp.get(keyword)
         LAST_QUOTA = resp.quota
     else:
-        resp = SetuResp(code=-3, msg='你的请求太快了，休息一下吧')
+        resp = SetuResp(code=-3, msg='欧尼酱你的速度太快了，休息一下吧')
 
     if resp.code == 0:
         cd.update(member_id)
