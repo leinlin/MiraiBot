@@ -1,6 +1,7 @@
 import aiohttp
 import lxml.html
 import typing as T
+import re
 from mirai import Mirai, Group, GroupMessage, MessageChain, Image, Plain
 from mirai.logger import Event as EventLogger
 
@@ -10,6 +11,10 @@ last_message = None
 @sub_app.receiver(GroupMessage)
 async def fudu(app: Mirai, group: Group, message: MessageChain):
     global last_message
+    match = re.match(r'(?:.*?([\d一二两三四五六七八九十]*)张|来点)?(.{0,10}?)的?[色|涩]图$', message.toString())
+    if match:
+        return
+
     if last_message != None and last_message.toString() == message.toString():
         EventLogger.info(f"{message.toString()}消息已复读")
         replyArray = []
