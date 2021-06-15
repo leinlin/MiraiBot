@@ -19,7 +19,7 @@ async def fudu(app: Mirai, group: Group, message: MessageChain):
         EventLogger.info(f"{message.toString()}消息已复读")
         replyArray = []
         for v in message:
-            if type(v) == Image or type(v) == Plain or type(v) == At or type(v) == AtAll or type(v) == QQFaces:
+            if type(v) == Image or type(v) == Plain or type(v) == At or type(v) == AtAll or type(v) == Face:
                 replyArray.append(v)
 
         await app.sendGroupMessage(group, replyArray)
