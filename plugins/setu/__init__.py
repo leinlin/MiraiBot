@@ -35,12 +35,12 @@ async def GMHandler(app: Mirai, message: GroupMessage):
             EventLogger.error(e)
             EventLogger.error(traceback.format_exc())
 
-    elif message.toString() == '[色|涩]图配额':
+    elif message.toString() == '色图配额':
         await checkQuota(app, message)
 
 
 async def checkQuota(app: Mirai, message: GroupMessage):
-    resp = await SetuResp.get('[色|涩]图配额')
+    resp = await SetuResp.get('色图配额')
     await app.sendGroupMessage(group=message.sender.group,
                                message=f'剩余配额：{resp.quota}\n恢复时间：{resp.time_to_recover.strftime("%m-%d %H:%M")}',
                                quoteSource=message.messageChain.getSource())
