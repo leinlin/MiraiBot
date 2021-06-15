@@ -2,7 +2,7 @@ import aiohttp
 import lxml.html
 import typing as T
 import re
-from mirai import Mirai, Group, GroupMessage, MessageChain, Image, Plain, QQFaces, At, AtAll
+from mirai import Mirai, Group, GroupMessage, MessageChain, Image, Plain, Face, At, AtAll
 from mirai.logger import Event as EventLogger
 
 sub_app = Mirai(f"mirai://localhost:8080/?authKey=0&qq=0")
