@@ -2,7 +2,7 @@ import aiohttp
 import lxml.html
 import typing as T
 import re
-from mirai import Mirai, Group, GroupMessage, MessageChain, Image, Plain
+from mirai import Mirai, Group, GroupMessage, MessageChain, Image, Plain, QQFaces, At, AtAll
 from mirai.logger import Event as EventLogger
 
 sub_app = Mirai(f"mirai://localhost:8080/?authKey=0&qq=0")
@@ -19,7 +19,7 @@ async def fudu(app: Mirai, group: Group, message: MessageChain):
         EventLogger.info(f"{message.toString()}消息已复读")
         replyArray = []
         for v in message:
-            if type(v) == Image or type(v) == Plain:
+            if type(v) == Image or type(v) == Plain or type(v) == At or type(v) == AtAll or type(v) == QQFaces:
                 replyArray.append(v)
 
         await app.sendGroupMessage(group, replyArray)
