@@ -52,8 +52,8 @@ class SetuData(BaseModel):
                 img_bytes: bytes = await resp.read()
             if check_size:
                 img: PIL.Image.Image = PIL.Image.open(BytesIO(initial_bytes=img_bytes))
-                if img.size != (self.width, self.height):
-                    raise ValueError(f'Image Size Error: expected {(self.width, self.height)} but got {img.size}')
+                #if img.size != (self.width, self.height):
+                #    raise ValueError(f'Image Size Error: expected {(self.width, self.height)} but got {img.size}')
         except (asyncio.TimeoutError, ValueError) as e:
             raise e
         except PIL.UnidentifiedImageError:
