@@ -126,16 +126,8 @@ class SetuDatabase(BaseModel):
 
 class SetuResp(BaseModel):
     error: str
-    quota: int = 0
-    quota_min_ttl: int = 0
-    time_to_recover: datetime = None
     count: int = 0
     data: List[SetuData] = []
-
-    @validator('time_to_recover', pre=True, always=True)
-    def get_ttr(cls, _, values):
-        quota_min_ttl: int = values['quota_min_ttl']
-        return datetime.now() + timedelta(seconds=quota_min_ttl)
 
     def save(self) -> None:
         SetuDatabase.save(*self.data)

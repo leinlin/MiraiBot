@@ -18,8 +18,6 @@ cd = CoolDown(app='setu', td=20)
 
 sub_app = Mirai(f"mirai://localhost:8080/?authKey=0&qq=0")
 
-LAST_QUOTA: int = 300
-
 
 @sub_app.receiver("GroupMessage")
 async def GMHandler(app: Mirai, message: GroupMessage):
@@ -37,30 +35,14 @@ async def GMHandler(app: Mirai, message: GroupMessage):
             EventLogger.error(e)
             EventLogger.error(traceback.format_exc())
 
-    elif message.toString() == '色图配额':
-        await checkQuota(app, message)
-
-
-async def checkQuota(app: Mirai, message: GroupMessage):
-    resp = await SetuResp.get('色图配额')
-    await app.sendGroupMessage(group=message.sender.group,
-                               message=f'剩余配额：{resp.quota}\n恢复时间：{resp.time_to_recover.strftime("%m-%d %H:%M")}',
-                               quoteSource=message.messageChain.getSource())
-
 
 async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: str):
     """根据关键词获取data_array，并调用sendSetu"""
-    global LAST_QUOTA
     member_id: int = message.sender.id
     if keyword == '':
-        if len(SetuDatabase.load_from_file().__root__) >= 300 and LAST_QUOTA < 200:
-            resp = SetuResp(error='空关键词')
-        else:
-            resp = await SetuResp.get()
-            LAST_QUOTA = resp.quota
+        resp = await SetuResp.get()
     elif cd.check(member_id):
         resp = await SetuResp.get(keyword)
-        LAST_QUOTA = resp.quota
     else:
         resp = SetuResp(error='欧尼酱你的速度太快了，休息一下吧')
 
