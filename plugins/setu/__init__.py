@@ -30,7 +30,7 @@ async def GMHandler(app: Mirai, message: GroupMessage):
         if r18Match:
             setu_r18 = '1'
         else:
-            setu_r18 = '0'
+            setu_r18 = ''
 
         number: int = shuzi2number(match[1])
         if number > 10:
