@@ -14,7 +14,7 @@ from .SetuData import SetuData, SetuResp, SetuDatabase
 from .._utils import CoolDown, shuzi2number
 from config import setu_r18
 
-cd = CoolDown(app='setu', td=20)
+cd = CoolDown(app='setu', td=10)
 
 sub_app = Mirai(f"mirai://localhost:8080/?authKey=0&qq=0")
 
@@ -44,7 +44,7 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
     elif cd.check(member_id):
         resp = await SetuResp.get(keyword)
     else:
-        resp = SetuResp(error='欧尼酱你的速度太快了，休息一下吧')
+        resp = SetuResp(error='欧尼酱~（＾ω＾）♪月下酱正在准备色图中，等下在过来')
 
     if resp.error == "":
         cd.update(member_id)
