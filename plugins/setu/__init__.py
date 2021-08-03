@@ -44,7 +44,7 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
     elif cd.check(member_id):
         resp = await SetuResp.get(keyword)
     else:
-        resp = SetuResp(error='欧尼酱~（＾ω＾）♪月下酱正在准备色图中，等下在过来')
+        resp = SetuResp(error='欧尼酱~（＾ω＾）♪月下酱正在准备色图中，等下在过来吧')
 
     if resp.error == "":
         cd.update(member_id)
