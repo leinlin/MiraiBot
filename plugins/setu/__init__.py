@@ -28,9 +28,9 @@ async def GMHandler(app: Mirai, message: GroupMessage):
     if match:
         r18Match = re.match(r'.*?色图$', msgStr)
         if r18Match:
-            setu_r18 = 1
+            setu_r18 = '1'
         else:
-            setu_r18 = 0
+            setu_r18 = '0'
 
         number: int = shuzi2number(match[1])
         if number > 10:
