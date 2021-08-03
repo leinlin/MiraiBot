@@ -75,6 +75,9 @@ async def sendSetu(app: Mirai, message: GroupMessage, data_array: Union[Set[Setu
 
     number = min(number, len(data_array))
 
+    if number == 0:
+        await app.sendGroupMessage(group,
+                            [At(sender.id), Plain(f"抱歉没有找到对应的色图")])
     # 延时逐个启动任务
     tasks: List[asyncio.Task[None]] = []
     for i, data in enumerate(random.sample(data_array, k=number)):
