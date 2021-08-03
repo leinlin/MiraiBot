@@ -12,6 +12,7 @@ from mirai.logger import Event as EventLogger
 
 from .SetuData import SetuData, SetuResp, SetuDatabase
 from .._utils import CoolDown, shuzi2number
+from config import setu_r18
 
 cd = CoolDown(app='setu', td=20)
 
@@ -22,8 +23,15 @@ LAST_QUOTA: int = 300
 
 @sub_app.receiver("GroupMessage")
 async def GMHandler(app: Mirai, message: GroupMessage):
-    match = re.match(r'(?:.*?([\d一二两三四五六七八九十]*)张|来点)?(.{0,10}?)的?[色|涩]图$', message.toString())
+    msgStr = message.toString()
+    match = re.match(r'(?:.*?([\d一二两三四五六七八九十]*)张|来点)?(.{0,10}?)的?[色|涩]图$', msgStr)
     if match:
+        r18Match = re.match(r'.*?色图$', msgStr)
+        if r18Match:
+            setu_r18 = 1
+        else:
+            setu_r18 = 0
+
         number: int = shuzi2number(match[1])
         if number > 10:
             number = 1
