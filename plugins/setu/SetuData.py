@@ -15,20 +15,20 @@ Path(data_path).mkdir(exist_ok=True)
 SAVE_FILE = Path(data_path).joinpath('setu.json')
 
 class SetuUrlData(BaseModel):
-    original: str
+    regular: str
 
     @property
     def purl(self) -> str:
-        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.original).path).stem.split('_')[0])
+        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.regular).path).stem.split('_')[0])
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.original == other.original
+            return self.regular == other.regular
         else:
             return False
 
     def __hash__(self):
-        return hash(self.original)
+        return hash(self.regular)
 
     def save(self) -> None:
         """保存至文件"""
@@ -37,8 +37,8 @@ class SetuUrlData(BaseModel):
     async def get(self, check_size: bool = True) -> bytes:
         """从网络获取图像"""
         try:
-            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.original else {}
-            async with aiohttp.request('GET', self.original, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
+            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.regular else {}
+            async with aiohttp.request('GET', self.regular, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
                 img_bytes: bytes = await resp.read()
             if check_size:
                 img: PIL.Image.Image = PIL.Image.open(BytesIO(initial_bytes=img_bytes))
@@ -60,13 +60,13 @@ class SetuData(BaseModel):
     r18: bool = None
     width: int = None
     height: int = None
-    tags: List[str] = None
+    tags: List[str] = []
     uploadDate: int = None
     ext: str = None
 
     @property
     def purl(self) -> str:
-        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.urls.original).path).stem.split('_')[0])
+        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.urls.regular).path).stem.split('_')[0])
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -85,9 +85,9 @@ class SetuData(BaseModel):
         """从网络获取图像"""
         try:
             
-            EventLogger.info(f"url:{self.urls.original}")
-            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.urls.original else {}
-            async with aiohttp.request('GET', self.urls.original, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
+            EventLogger.info(f"url:{self.urls.regular}")
+            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.urls.regular else {}
+            async with aiohttp.request('GET', self.urls.regular, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
                 img_bytes: bytes = await resp.read()
             if check_size:
                 img: PIL.Image.Image = PIL.Image.open(BytesIO(initial_bytes=img_bytes))
@@ -138,10 +138,10 @@ class SetuResp(BaseModel):
         params = {
             "apikey": setu_apikey,
             "r18": setu_r18,
-            "tag": [keyword],
+            "keyword": keyword,
             "num": 100,
             "proxy": setu_proxy,
-            "size": 'original'
+            "size": 'regular'
         }
         async with aiohttp.request('GET', api_url, params=params) as response:
             setu_j = await response.read()
