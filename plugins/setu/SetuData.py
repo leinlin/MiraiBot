@@ -104,11 +104,11 @@ class SetuResp(BaseModel):
 
     @staticmethod
     async def get(keyword='') -> "SetuResp":
-        api_url = 'https://api.lolicon.app/setu/'
+        api_url = 'https://api.lolicon.app/setu/v2'
         params = {
             "apikey": setu_apikey,
             "r18": setu_r18,
-            "keyword": keyword,
+            "tag": [keyword],
             "num": 100,
             "proxy": setu_proxy,
             "size1200": 'true'

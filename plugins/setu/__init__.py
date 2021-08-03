@@ -26,12 +26,6 @@ async def GMHandler(app: Mirai, message: GroupMessage):
     msgStr = message.toString()
     match = re.match(r'(?:.*?([\d一二两三四五六七八九十]*)张|来点)?(.{0,10}?)的?[色|涩]图$', msgStr)
     if match:
-        r18Match = re.match(r'.*?色图$', msgStr)
-        if r18Match:
-            setu_r18 = '1'
-        else:
-            setu_r18 = ''
-
         number: int = shuzi2number(match[1])
         if number > 10:
             number = 1

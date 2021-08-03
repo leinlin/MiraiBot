@@ -11,7 +11,7 @@ data_path = os.path.join(os.path.dirname(__file__), 'data')
 # ============= START =============
 
 setu_apikey: str = ''
-setu_r18: str = '1'
+setu_r18: str = '2'
 setu_proxy: str = 'disable'
     
 # ============== END ==============
