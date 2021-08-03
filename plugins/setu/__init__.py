@@ -64,16 +64,13 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
     else:
         resp = SetuResp(code=-3, msg='欧尼酱你的速度太快了，休息一下吧')
 
-    if resp.code == 0:
+    if resp.error == "":
         cd.update(member_id)
         await sendSetu(app, message, resp.data, number)
-    elif resp.code in [429, -430]:
-        db = SetuDatabase.load_from_file()
-        await sendSetu(app, message, db.__root__, number)
     else:
         group: Group = message.sender.group
         source: Source = message.messageChain.getSource()
-        await app.sendGroupMessage(group, resp.msg, source)
+        await app.sendGroupMessage(group, resp.error, source)
 
 
 async def sendSetu(app: Mirai, message: GroupMessage, data_array: Union[Set[SetuData], List[SetuData]], number: int):
