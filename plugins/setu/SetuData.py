@@ -14,31 +14,21 @@ from config import data_path, setu_apikey, setu_proxy, setu_r18
 Path(data_path).mkdir(exist_ok=True)
 SAVE_FILE = Path(data_path).joinpath('setu.json')
 
-
-class SetuData(BaseModel):
-    pid: int = None
-    p: int = None
-    uid: int = None
-    title: str = None
-    author: str = None
-    url: str
-    r18: bool = None
-    width: int = None
-    height: int = None
-    tags: List[str] = None
+class SetuUrlData(BaseModel):
+    original: str
 
     @property
     def purl(self) -> str:
-        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.url).path).stem.split('_')[0])
+        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.original).path).stem.split('_')[0])
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self.url == other.url
+            return self.original == other.original
         else:
             return False
 
     def __hash__(self):
-        return hash(self.url)
+        return hash(self.original)
 
     def save(self) -> None:
         """保存至文件"""
@@ -47,8 +37,55 @@ class SetuData(BaseModel):
     async def get(self, check_size: bool = True) -> bytes:
         """从网络获取图像"""
         try:
-            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.url else {}
-            async with aiohttp.request('GET', self.url, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
+            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.original else {}
+            async with aiohttp.request('GET', self.original, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
+                img_bytes: bytes = await resp.read()
+            if check_size:
+                img: PIL.Image.Image = PIL.Image.open(BytesIO(initial_bytes=img_bytes))
+                #if img.size != (self.width, self.height):
+                #    raise ValueError(f'Image Size Error: expected {(self.width, self.height)} but got {img.size}')
+        except (asyncio.TimeoutError, ValueError) as e:
+            raise e
+        except PIL.UnidentifiedImageError:
+            raise ValueError(f'Image load fail {str(img_bytes[:20])}...')
+        return img_bytes
+
+class SetuData(BaseModel):
+    pid: int = None
+    p: int = None
+    uid: int = None
+    title: str = None
+    author: str = None
+    urls: SetuUrlData = {}
+    r18: bool = None
+    width: int = None
+    height: int = None
+    tags: List[str] = None
+    uploadDate: int = None
+    ext: str = None
+
+    @property
+    def purl(self) -> str:
+        return 'https://www.pixiv.net/artworks/{}'.format(Path(urlparse(self.urls.original).path).stem.split('_')[0])
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.pid == other.pid
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(self.pid)
+
+    def save(self) -> None:
+        """保存至文件"""
+        SetuDatabase.save(self)
+
+    async def get(self, check_size: bool = True) -> bytes:
+        """从网络获取图像"""
+        try:
+            headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.urls.original else {}
+            async with aiohttp.request('GET', self.urls.original, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
                 img_bytes: bytes = await resp.read()
             if check_size:
                 img: PIL.Image.Image = PIL.Image.open(BytesIO(initial_bytes=img_bytes))
@@ -86,8 +123,7 @@ class SetuDatabase(BaseModel):
 
 
 class SetuResp(BaseModel):
-    code: int
-    msg: str
+    error: str
     quota: int = 0
     quota_min_ttl: int = 0
     time_to_recover: datetime = None
@@ -116,5 +152,6 @@ class SetuResp(BaseModel):
         async with aiohttp.request('GET', api_url, params=params) as response:
             setu_j = await response.read()
         resp: SetuResp = SetuResp.parse_raw(setu_j)
+        resp.count = len(resp.data)
         resp.save()
         return resp
