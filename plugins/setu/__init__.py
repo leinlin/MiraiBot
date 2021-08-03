@@ -54,7 +54,7 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
     member_id: int = message.sender.id
     if keyword == '':
         if len(SetuDatabase.load_from_file().__root__) >= 300 and LAST_QUOTA < 200:
-            resp = SetuResp(code=-430, msg='空关键词')
+            resp = SetuResp(error='空关键词')
         else:
             resp = await SetuResp.get()
             LAST_QUOTA = resp.quota
@@ -62,7 +62,7 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
         resp = await SetuResp.get(keyword)
         LAST_QUOTA = resp.quota
     else:
-        resp = SetuResp(code=-3, msg='欧尼酱你的速度太快了，休息一下吧')
+        resp = SetuResp(error='欧尼酱你的速度太快了，休息一下吧')
 
     EventLogger.info(f"{resp.error}错误信息")
     if resp.error == "":
