@@ -64,6 +64,7 @@ async def setuExecutor(app: Mirai, message: GroupMessage, number: int, keyword: 
     else:
         resp = SetuResp(code=-3, msg='欧尼酱你的速度太快了，休息一下吧')
 
+    EventLogger.info(f"{resp.error}错误信息")
     if resp.error == "":
         cd.update(member_id)
         await sendSetu(app, message, resp.data, number)

@@ -8,7 +8,7 @@ from typing import List, Set
 from datetime import datetime, timedelta
 from pydantic import BaseModel, validator, ValidationError
 from urllib.parse import urlparse
-
+from mirai.logger import Event as EventLogger
 from config import data_path, setu_apikey, setu_proxy, setu_r18
 
 Path(data_path).mkdir(exist_ok=True)
@@ -84,6 +84,8 @@ class SetuData(BaseModel):
     async def get(self, check_size: bool = True) -> bytes:
         """从网络获取图像"""
         try:
+            
+            EventLogger.info(f"url:{self.urls.original}")
             headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.urls.original else {}
             async with aiohttp.request('GET', self.urls.original, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
                 img_bytes: bytes = await resp.read()
