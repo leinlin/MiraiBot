@@ -22,6 +22,7 @@ async def fudu(app: Mirai, group: Group, message: MessageChain):
             if type(v) == Image or type(v) == Plain or type(v) == At or type(v) == AtAll or type(v) == Face:
                 replyArray.append(v)
 
+        last_message = None
         await app.sendGroupMessage(group, replyArray)
     else:
         if last_message != None:
