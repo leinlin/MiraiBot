@@ -88,15 +88,10 @@ class SetuData(BaseModel):
             EventLogger.info(f"url:{self.urls.regular}")
             headers = {'Referer': 'https://www.pixiv.net/'} if 'i.pximg.net' in self.urls.regular else {}
             async with aiohttp.request('GET', self.urls.regular, headers=headers, timeout=aiohttp.ClientTimeout(10)) as resp:
+                EventLogger.info(f"url:{self.urls.regular} download success")
                 img_bytes: bytes = await resp.read()
-            if check_size:
-                img: PIL.Image.Image = PIL.Image.open(BytesIO(initial_bytes=img_bytes))
-                #if img.size != (self.width, self.height):
-                #    raise ValueError(f'Image Size Error: expected {(self.width, self.height)} but got {img.size}')
         except (asyncio.TimeoutError, ValueError) as e:
             raise e
-        except PIL.UnidentifiedImageError:
-            raise ValueError(f'Image load fail {str(img_bytes[:20])}...')
         return img_bytes
 
 
