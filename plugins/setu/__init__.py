@@ -63,7 +63,7 @@ async def sendSetu(app: Mirai, message: GroupMessage, data_array: Union[Set[Setu
     async def send(prefix_: str, data_: SetuData):
         try:
             setu_b: bytes = await data_.get()
-            EventLogger.info(f"url:{self.urls.regular} 已经下载成功，现在发送到qq群")
+            EventLogger.info("已经下载成功，现在发送到qq群")
             await app.sendGroupMessage(group,
                                        [At(sender.id), Plain("欧尼酱~（＾ω＾）♪看看这是不是你想要的色图"),Plain(prefix_ + data_.purl + '\n'), Image.fromBytes(setu_b), Plain(f"性癖是：{','.join(data_.tags)}")])
             EventLogger.info(f"{prefix_}色图已发送，标签：{','.join(data_.tags)}")
