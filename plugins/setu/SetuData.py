@@ -112,13 +112,6 @@ class SetuData(BaseModel):
             }
         }
         requests.post(post_url, headers=headers, json=data)
-        data = {
-            "msgtype": "text",
-            "text": {
-                "content": textContent
-            }
-        }
-        requests.post(post_url, headers=headers, json=data)
 
 class SetuDatabase(BaseModel):
     __root__: Set[SetuData] = set()

@@ -67,8 +67,7 @@ async def sendSetu(app: Mirai, message: GroupMessage, data_array: Union[Set[Setu
             await app.sendGroupMessage(group,
                                        [At(sender.id), Plain("欧尼酱~（＾ω＾）♪看看这是不是你想要的色图"),Plain(prefix_ + data_.purl + '\n'), Image.fromBytes(setu_b), Plain(f"性癖是：{','.join(data_.tags)}")])
             EventLogger.info(f"{prefix_}色图已发送，标签：{','.join(data_.tags)}")
-            text = '欧尼酱~（＾ω＾）♪ 工作辛苦了，这个月下酱给你找来的资源，链接是：{data_purl }'.format(data_purl = data._purl)
-            data_.sendToWeiXinBot(setu_b, text)
+            data_.sendToWeiXinBot(setu_b)
 
         except asyncio.TimeoutError as e:
             EventLogger.warn('连接超时' + str(e))
