@@ -97,7 +97,7 @@ class SetuData(BaseModel):
             raise e
         return img_bytes
 
-    def sendToWeiXinBot(self, img_bytes, textContent):
+    def sendToWeiXinBot(self, img_bytes):
         post_url = "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=8ba1eaf1-6e9b-4753-903b-14d1d8c36946"
         headers = {"Content-Type": "text/plain"}
         base64_data = base64.b64encode(img_bytes)
