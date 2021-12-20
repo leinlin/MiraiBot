@@ -63,8 +63,8 @@ async def sendSetu(app: Mirai, message: GroupMessage, data_array: Union[Set[Setu
     async def send(prefix_: str, data_: SetuData):
         try:
             setu_b: bytes = await data_.get()
-            text = f'欧尼酱~（＾ω＾）♪ 工作辛苦了，月下酱找到了一张花纹奇怪的图案，你要看看吗？链接是：{data_.purl }'
-            data_.sendToWeiXinBot(setu_b, text)
+            # text = f'欧尼酱~（＾ω＾）♪ 工作辛苦了，月下酱找到了一张花纹奇怪的图案，你要看看吗？链接是：{data_.purl }'
+            # data_.sendToWeiXinBot(setu_b, text)
 
             EventLogger.info("已经下载成功，现在发送到qq群")
             await app.sendGroupMessage(group,
